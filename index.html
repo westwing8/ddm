@@ -35,7 +35,8 @@ ol.pl li a{display:flex;gap:10px;padding:11px 4px;border-bottom:1px solid #eceef
 .num{flex:0 0 22px;height:22px;border-radius:5px;background:var(--pri);color:#fff;font-size:12px;
  display:flex;align-items:center;justify-content:center;margin-top:3px}
 .pt{font-size:14px}.pd{font-size:12px;color:var(--muted)}
-figure{margin:0 0 10px}
+figure{margin:0 0 28px}
+figure:last-child{margin-bottom:10px}
 figure img{width:100%;border:1px solid var(--bd);border-radius:6px;display:block}
 figure a{display:block}
 figcaption{font-size:13px;font-weight:700;color:var(--fg);line-height:1.4}
@@ -206,12 +207,14 @@ function media(list, kind){
     return '<div class="ph">'+kind+' 자료를 준비 중입니다.</div>';
   }
   var top = (CONFIG.captionPosition !== 'bottom');
-  return '<div class="tap">이미지를 누르면 원본이 새 탭에서 열립니다.</div>' + list.map(function(m){
-    var cap = '<figcaption>'+esc(m.cap)+'</figcaption>';
+  return '<div class="tap">이미지를 누르면 원본이 새 탭에서 열립니다.</div><div class="figs">' + list.map(function(m, i){
+    var KO = ['가','나','다','라','마','바','사','아','자','차','카','타','파','하'];
+    var no = (i < KO.length) ? KO[i] : String(i+1);
+    var cap = '<figcaption>'+no+'. '+esc(m.cap)+'</figcaption>';
     var img = '<a href="'+esc(m.src)+'" target="_blank" rel="noopener">'
             + '<img loading="lazy" src="'+esc(m.src)+'" alt="'+esc(m.cap)+'"></a>';
     return '<figure class="'+(top?'ct':'cb')+'">'+(top ? cap+img : img+cap)+'</figure>';
-  }).join('');
+  }).join('') + '</div>';
 }
 
 function linksBox(list){
