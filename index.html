@@ -36,7 +36,14 @@ ol.pl li a{display:flex;gap:10px;padding:11px 4px;border-bottom:1px solid #eceef
  display:flex;align-items:center;justify-content:center;margin-top:3px}
 .pt{font-size:14px}.pd{font-size:12px;color:var(--muted)}
 figure{margin:0 0 28px}
-figure:last-child{margin-bottom:10px}
+.figs figure:last-child{margin-bottom:10px}
+.vid{display:block;width:100%;box-sizing:border-box;margin:0 0 16px;text-decoration:none;color:var(--fg)}
+.vth{display:block;position:relative;width:100%;height:0;padding-top:56.25%;box-sizing:border-box;border:1px solid var(--bd);border-radius:6px;overflow:hidden;background:#000}
+.vth img{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;max-width:none;margin:0;object-fit:cover;border:0;border-radius:0}
+.play{position:absolute;left:50%;top:50%;width:64px;height:44px;margin:-22px 0 0 -32px;border-radius:10px;background:rgba(220,0,0,.9)}
+.play:after{content:'';position:absolute;left:26px;top:13px;border-style:solid;border-width:9px 0 9px 15px;border-color:transparent transparent transparent #fff}
+.vt{display:block;font-size:13px;font-weight:700;line-height:1.4;margin-top:6px}
+.vt.vt-top{margin-top:0;margin-bottom:6px}
 figure img{width:100%;border:1px solid var(--bd);border-radius:6px;display:block}
 figure a{display:block}
 figcaption{font-size:13px;font-weight:700;color:var(--fg);line-height:1.4}
@@ -126,7 +133,10 @@ var POINTS = [
   { title:"전태일 동상",
     sub:"평화시장, 명보다방, 김옥상",
     naver:"",
-    photos:[], charts:[], readings:[], links:[] },
+    photos:[], charts:[], readings:[], links:[],
+    videos:[
+      {id:"kjBaR42Z4dc", t:"SBS 꼬리에 꼬리를 무는 이야기 - 전태일"}
+    ] },
 
   { title:"신진시장",
     sub:"동대문 생선구이 골목, 신진시장, 동대문시장",
@@ -176,7 +186,10 @@ var POINTS = [
   { title:"중앙아시아길",
     sub:"중앙아시아 타운의 정착 역사",
     naver:"",
-    photos:[], charts:[], readings:[], links:[] }
+    photos:[], charts:[], readings:[], links:[],
+    videos:[
+      {id:"ykwfoMAVQ8A", t:"KBS 다큐 3일 - 중앙아시아길"}
+    ] }
 ];
 
 /* ===== 3. 아래는 수정할 필요가 없습니다 ===== */
@@ -207,14 +220,30 @@ function media(list, kind){
     return '<div class="ph">'+kind+' 자료를 준비 중입니다.</div>';
   }
   var top = (CONFIG.captionPosition !== 'bottom');
-  return '<div class="tap">이미지를 누르면 원본이 새 탭에서 열립니다.</div><div class="figs">' + list.map(function(m, i){
-    var KO = ['가','나','다','라','마','바','사','아','자','차','카','타','파','하'];
-    var no = (i < KO.length) ? KO[i] : String(i+1);
-    var cap = '<figcaption>'+no+'. '+esc(m.cap)+'</figcaption>';
+  var KO = ['가','나','다','라','마','바','사','아','자','차','카','타','파','하'];
+  return '<div class="tap">이미지를 누르면 원본이 새 탭에서 열립니다.</div><div class="figs">' + list.map(function(m, n){
+    var no = (n < KO.length ? KO[n] : (n+1)) + '. ';
+    var cap = '<figcaption>'+no+esc(m.cap)+'</figcaption>';
     var img = '<a href="'+esc(m.src)+'" target="_blank" rel="noopener">'
             + '<img loading="lazy" src="'+esc(m.src)+'" alt="'+esc(m.cap)+'"></a>';
     return '<figure class="'+(top?'ct':'cb')+'">'+(top ? cap+img : img+cap)+'</figure>';
   }).join('') + '</div>';
+}
+
+function videoBox(list){
+  if(!list || !list.length){ return ''; }
+  var h = '<div class="sect">영상</div>';
+  var top = (CONFIG.captionPosition !== 'bottom');
+  h += list.map(function(v){
+    var url = 'https://www.youtube.com/watch?v=' + v.id + (v.start ? '&t=' + v.start + 's' : '');
+    return '<a class="vid" href="'+esc(url)+'" target="_blank" rel="noopener">'
+         + (top ? '<span class="vt vt-top">'+esc(v.t)+'</span>' : '')
+         + '<span class="vth"><img src="https://i.ytimg.com/vi/'+esc(v.id)+'/hqdefault.jpg" referrerpolicy="no-referrer" onerror="if(!this.dataset.f){this.dataset.f=1;this.src=this.src.replace(\'hqdefault\',\'mqdefault\');}" alt="'+esc(v.t)+'">'
+         + '<span class="play"></span></span>'
+         + (top ? '' : '<span class="vt">'+esc(v.t)+'</span>')
+         + '</a>';
+  }).join('');
+  return h;
 }
 
 function linksBox(list){
@@ -264,6 +293,7 @@ function renderPoint(i){
   }
   h += '<div class="sect">사진·도표</div>' + media(p.photos, '사진·도표');
   if(p.charts && p.charts.length){ h += '<div class="sect">도표</div>' + media(p.charts, '도표'); }
+  h += videoBox(p.videos);
   h += '<div class="sect">읽기 자료</div>';
   h += (p.readings && p.readings.length)
      ? p.readings.map(function(r){
