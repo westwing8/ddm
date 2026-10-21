@@ -344,12 +344,6 @@ function renderPoint(i){
   h += '<div class="sect">사진·도표</div>' + (inl ? media(p.photos, '사진·도표', p.videos, p.videoAfter) : media(p.photos, '사진·도표'));
   if(p.charts && p.charts.length){ h += '<div class="sect">도표</div>' + media(p.charts, '도표'); }
   if(!inl){ h += videoBox(p.videos); }
-  h += '<div class="sect">읽기 자료</div>';
-  h += (p.readings && p.readings.length)
-     ? p.readings.map(function(r){
-         return '<details><summary>'+esc(r.t)+'</summary><p>'+esc(r.html)+'</p></details>';
-       }).join('')
-     : '<div class="ph">읽기 자료를 준비 중입니다.</div>';
   h += linksBox(p.links);
   h += '<div class="nav">';
   h += (i > 1) ? '<a href="#/p'+(i-1)+'">이전 포인트</a>' : '<a href="#/home">HOME</a>';
