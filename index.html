@@ -262,7 +262,9 @@ function media(list, kind, vids, after){
   /* 각 이미지 위에 "가. 파일 제목"을 제목처럼 표시하고, 이미지 사이에는 빈 줄 1줄을 넣습니다. */
   var items = list.map(function(m, n){
     var no = (n < KO.length ? KO[n] : (n+1)) + '.';
-    var head = '<div class="ftitle"><span class="fno">'+no+'</span><span>'+esc(m.cap)+'</span></div>';
+    /* 링크(href)가 있는 이미지는 제목 뒤에 " (링크)"를 자동으로 붙입니다. */
+    var title = m.cap + (m.href ? ' (링크)' : '');
+    var head = '<div class="ftitle"><span class="fno">'+no+'</span><span>'+esc(title)+'</span></div>';
     var img = '<a href="'+esc(m.href || m.src)+'" target="_blank" rel="noopener">'
             + '<img loading="lazy" src="'+esc(m.src)+'" alt="'+esc(m.cap)+'"></a>';
     return '<figure>'+head+img+'</figure>';
