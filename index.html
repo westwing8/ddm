@@ -26,6 +26,8 @@ h2{font-size:18px;margin:6px 0 2px}
 .hs{position:absolute;width:8%;padding-bottom:8%;transform:translate(-50%,-50%);
  border-radius:50%;background:transparent}
 .hs:active{background:rgba(37,99,235,.25)}
+.hx{position:absolute;transform:translate(-50%,-50%);border-radius:6px;background:transparent}
+.hx:active{background:rgba(200,0,0,.2)}
 .note{font-size:12px;color:var(--muted);margin-top:6px}
 a.btn{display:block;margin-top:10px;padding:12px;border:1px solid var(--pri);border-radius:6px;
  color:var(--pri);font-size:14px;text-decoration:none;text-align:center}
@@ -105,6 +107,11 @@ var HOTSPOTS = {
   7:[55.5,53.3],
   8:[73.2,66.3]
 };
+
+/* 약도 위 외부 링크(뒤풀이 식당 등) - x, y는 가운데 위치(%), w, h는 클릭 영역 크기(%) */
+var EXTRA_SPOTS = [
+  {x:36.8, y:74.5, w:10.5, h:10.3, url:"https://naver.me/xSF3Cufh", label:"뒤풀이 식당"}
+];
 
 /* ===== 2. 답사 포인트 내용 ===== */
 var POINTS = [
@@ -314,6 +321,12 @@ function renderHome(){
       h += '<a class="hs" href="#/p'+k+'" aria-label="포인트 '+k+'" '
          + 'style="left:'+c[0]+'%;top:'+c[1]+'%"></a>';
     }
+  }
+  for(var j=0;j<EXTRA_SPOTS.length;j++){
+    var sp = EXTRA_SPOTS[j];
+    h += '<a class="hx" href="'+esc(sp.url)+'" target="_blank" rel="noopener" '
+       + 'aria-label="'+esc(sp.label)+'" title="'+esc(sp.label)+'" '
+       + 'style="left:'+sp.x+'%;top:'+sp.y+'%;width:'+sp.w+'%;height:'+sp.h+'%"></a>';
   }
   h += '</div>';
   if(CONFIG.mapNote){ h += '<div class="note">'+esc(CONFIG.mapNote)+'</div>'; }
